@@ -13,9 +13,9 @@ Many of these lakes have undergone “rejuvenation projects” by the government
 
 ## Three visualizations
 
-- **Map of lakes**: This interactive map helps visualize the lakes of Bengaluru and their pollution levels
-- **Sankey chart**: This visualization shows the distribution of lakes that have undegone rejuventation programs by the city and their pollution levels.
-- **Gauge chart**: This interactive visualization shows how much of the water treatment plants set up by the city are being used vs their capacity.
+- **Map of lakes**: This interactive map helps visualize the lakes of Bengaluru and their pollution levels ```lake-map.html```
+- **Sankey chart**: This visualization shows the distribution of lakes that have undegone rejuventation programs by the city and their pollution levels. ```sankey``` > ```index.html```
+- **Gauge chart**: This interactive visualization shows how much of the water treatment plants set up by the city are being used vs their capacity. ```gauge``` > ```index.html```
 
 
 ## Tools used
