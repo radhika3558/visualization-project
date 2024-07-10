@@ -1,0 +1,9 @@
+source,target,value
+Restored,Highly polluted,8
+Not restored,Highly polluted,10
+Restoration ongoing,Highly polluted,4
+Restored,Moderately polluted,11
+Not restored,Moderately polluted,2
+Restoration ongoing,Moderately polluted,2
+Restored,Less polluted,13
+Not restored,Less polluted,2

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gauge Visualization with Dataset</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta charset='utf-8' />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+    text {
+      font-family: "Verdana", sans-serif;
+    }
+    #chart {
+      max-width: 500px;
+    }
+    </style>
+  </head>
+  <body>
+    <select id="location-select"></select>
+    <div id="chart"></div>
+    <script src="script.js"></script>
+    <script>
+    const dataset = [
+      { location: "Vrishabavati Valley", capacity: 180, inUse: 66 },
+      { location: "Koramangala", capacity: 248, inUse: 102 },
+      { location: "Hebbal Valley", capacity: 60, inUse: 35 },
+      { location: "Yelahanka", capacity: 10, inUse: 2 },
+      { location: "Mylasandra", capacity: 75, inUse: 33 },
+      { location: "Nagasandra", capacity: 20, inUse: 4 },
+      { location: "Raja Canal", capacity: 40, inUse: 15 },
+      { location: "Kadabeesanahalli", capacity: 50, inUse: 31 }
+    ];
+
+    const select = document.getElementById("location-select");
+    dataset.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.text = item.location;
+      select.add(option);
+    });
+
+    select.addEventListener("change", function() {
+      updateGauge(dataset[this.value]);
+    });
+
+    function updateGauge(data) {
+      const gauge = gaugeChart()
+        .width(260)
+        .height(200)
+        .innerRadius(50)
+        .outerRadius(80)
+        .dataDomain([0, data.capacity]);
+
+      d3.select("#chart").datum([data.inUse, data.capacity]).call(gauge);
+    }
+
+    // Initialize with the first location
+    updateGauge(dataset[0]);
+
+    window.addEventListener("resize", function() {
+      const gWidth = Math.min(d3.select("#chart").node().offsetWidth, 260);
+      gauge.width(gWidth).innerRadius(gWidth / 4).outerRadius((gWidth / 4) + 40);
+      d3.select("#chart").call(gauge);
+    });
+    </script>
+  </body>
+</html>

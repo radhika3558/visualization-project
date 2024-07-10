@@ -1,0 +1,158 @@
+<!-- Code from d3-graph-gallery.com -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js and the geo projection plugin -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
+<!-- Button -->
+<div>
+  <input type="checkbox" class="checkbox" value="A" checked><label>Highly polluted</label>
+  <input type="checkbox" class="checkbox" value="B" checked><label>Moderately polluted</label>
+  <input type="checkbox" class="checkbox" value="C" checked><label>Less polluted</label>
+</div>
+
+<!-- Create an element where the map will take place 440/300-->
+<svg id="my_dataviz" width="600" height="600"></svg>
+
+
+<script>
+
+// The svg
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+// Map and projection
+var projection = d3.geoMercator()
+    .center([77.5946, 12.9716])                // GPS of location to zoom on
+    .scale(50000)                       // This is like the zoom
+    .translate([ width/2, height/2 ])
+
+// Create data for circles:
+var markers = [
+  {long: 77.66497222222223, lat: 12.916944444444443, group: "A", size: 7}, // Highly polluted
+  {long: 77.59894444444444, lat: 12.882722222222222, group: "A", size: 7}, // Highly polluted
+  {long: 77.62997222222222, lat: 12.874722222222223, group: "A", size: 7}, // Highly polluted
+  {long: 77.64377777777779, lat: 13.103944444444444, group: "C", size: 7}, // Less polluted
+  {long: 77.70905555555557, lat: 13.024805555555556, group: "A", size: 7}, // Highly polluted
+  {long: 77.63877777777779, lat: 12.884833333333333, group: "A", size: 7}, // Highly polluted
+  {long: 77.7075, lat: 12.965555555555556, group: "A", size: 7}, // Highly polluted
+  {long: 77.62933333333332, lat: 13.084555555555555, group: "B", size: 7}, // Moderately polluted
+  {long: 77.53129166666666, lat: 12.949941666666668, group: "C", size: 7}, // Less polluted
+  {long: 77.6858888888889, lat: 12.976083333333333, group: "A", size: 7}, // Highly polluted
+  {long: 77.55013888888888, lat: 12.902833333333334, group: "C", size: 7}, // Less polluted
+  {long: 77.49361666666667, lat: 12.931466666666667, group: "A", size: 7}, // Highly polluted
+  {long: 77.49841666666667, lat: 12.874416666666667, group: "C", size: 7}, // Less polluted
+  {long: 77.48665, lat: 13.010283333333334, group: "B", size: 7}, // Moderately polluted
+  {long: 77.58627777777777, lat: 13.046777777777777, group: "C", size: 7}, // Less polluted
+  {long: 77.48969444444444, lat: 12.988583333333333, group: "A", size: 7}, // Highly polluted
+  {long: 77.6033611111111, lat: 12.870333333333333, group: "A", size: 7}, // Highly polluted
+  {long: 77.55030555555555, lat: 13.035083333333333, group: "C", size: 7}, // Less polluted
+  {long: 77.61125, lat: 13.085527777777779, group: "B", size: 7}, // Moderately polluted
+  {long: 77.6725, lat: 12.912611111111111, group: "B", size: 7}, // Moderately polluted
+  {long: 77.6615, lat: 13.047, group: "A", size: 7}, // Highly polluted
+  {long: 77.66777777777779, lat: 12.904444444444445, group: "B", size: 7}, // Moderately polluted
+  {long: 77.61647222222221, lat: 13.11586111111111, group: "B", size: 7}, // Moderately polluted
+  {long: 77.6185, lat: 13.109638888888888, group: "C", size: 7}, // Less polluted
+  {long: 77.56097222222222, lat: 12.882, group: "A", size: 7}, // Highly polluted
+  {long: 77.57974999999999, lat: 12.873555555555557, group: "B", size: 7}, // Moderately polluted
+  {long: 77.71969444444444, lat: 12.970444444444444, group: "A", size: 7}, // Highly polluted
+  {long: 77.61786111111111, lat: 12.908166666666666, group: "B", size: 7}, // Moderately polluted
+  {long: 77.69261111111112, lat: 12.986749999999999, group: "A", size: 7}, // Highly polluted
+  {long: 77.49408333333334, lat: 12.965055555555555, group: "A", size: 7}, // Highly polluted
+  {long: 77.70833333333334, lat: 12.960666666666667, group: "C", size: 7}, // Less polluted
+  {long: 77.61611111111111, lat: 12.852166666666667, group: "C", size: 7}, // Less polluted
+  {long: 77.60927777777778, lat: 13.04525, group: "C", size: 7}, // Less polluted
+  {long: 77.73525000000001, lat: 12.974472222222222, group: "A", size: 7}, // Highly polluted
+  {long: 77.57519444444443, lat: 12.887749999999999, group: "A", size: 7}, // Highly polluted
+  {long: 77.61486111111111, lat: 13.061694444444445, group: "C", size: 7}, // Less polluted
+  {long: 77.68488888888889, lat: 13.047083333333333, group: "A", size: 7}, // Highly polluted
+  {long: 77.57391666666666, lat: 13.0105, group: "B", size: 7}, // Moderately polluted
+  {long: 77.64527777777778, lat: 12.88238888888889, group: "A", size: 7}, // Highly polluted
+  {long: 77.58516666666667, lat: 12.862916666666667, group: "B", size: 7}, // Moderately polluted
+  {long: 77.62844444444444, lat: 13.092861111111112, group: "B", size: 7}, // Moderately polluted
+  {long: 77.48036111111111, lat: 12.960972222222221, group: "A", size: 7}, // Highly polluted
+  {long: 77.61930555555556, lat: 12.982805555555556, group: "C", size: 7}, // Less polluted
+  {long: 77.54116666666667, lat: 12.907833333333334, group: "C", size: 7}, // Less polluted
+  {long: 77.69931666666666, lat: 13.014616666666667, group: "A", size: 7}, // Highly polluted
+  {long: 77.57669444444444, lat: 12.933361111111111, group: "B", size: 7}, // Moderately polluted
+  {long: 77.59469444444444, lat: 13.112916666666667, group: "C", size: 7}  // Less polluted
+];
+
+
+// Load external data and boot
+d3.json("https://gist.githubusercontent.com/rupinder-developer/9cf97efbbd9651eef88729fb390485c1/raw/d1f9b712521271747d26c6524e93afbe2a8562df/indian-cities.geojson", function(data){
+
+    // Filter data
+    data.features = data.features.filter(function (d) {
+        return d.properties.name === "Bangalore Urban";
+    });
+
+    // Create a color scale
+    var color = d3.scaleOrdinal()
+      .domain(["A", "B", "C" ])
+      .range([ "#402D54", "#D18975", "#8FD175"])
+
+    // Add a scale for bubble size
+    var size = d3.scaleLinear()
+      .domain([1,100])  // What's in the data
+      .range([ 4, 50])  // Size in pixel
+
+    // Draw the map
+    svg.append("g")
+        .selectAll("path")
+        .data(data.features)
+        .enter()
+        .append("path")
+          .attr("fill", "#b8b8b8")
+          .attr("d", d3.geoPath()
+              .projection(projection)
+          )
+        .style("stroke", "black")
+        .style("opacity", .3)
+
+    // Add circles:
+    svg
+      .selectAll("myCircles")
+      .data(markers)
+      .enter()
+      .append("circle")
+        .attr("class" , function(d){ return d.group })
+        .attr("cx", function(d){ return projection([d.long, d.lat])[0] })
+        .attr("cy", function(d){ return projection([d.long, d.lat])[1] })
+        .attr("r", function(d){ return size(d.size) })
+        .style("fill", function(d){ return color(d.group) })
+        .attr("stroke", function(d){ return color(d.group) })
+        .attr("stroke-width", 3)
+        .attr("fill-opacity", .4)
+
+
+    // This function is gonna change the opacity and size of selected and unselected circles
+    function update(){
+
+      // For each check box:
+      d3.selectAll(".checkbox").each(function(d){
+        cb = d3.select(this);
+        grp = cb.property("value")
+
+        // If the box is check, I show the group
+        if(cb.property("checked")){
+          svg.selectAll("."+grp).transition().duration(1000).style("opacity", 1).attr("r", function(d){ return size(d.size) })
+
+        // Otherwise I hide it
+        }else{
+          svg.selectAll("."+grp).transition().duration(1000).style("opacity", 0).attr("r", 0)
+        }
+      })
+    }
+
+    // When a button change, I run the update function
+    d3.selectAll(".checkbox").on("change",update);
+
+    // And I initialize it at the beginning
+    update()
+})
+
+</script>
